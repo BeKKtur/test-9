@@ -25,18 +25,17 @@ const Transactions = () => {
         if (id) {
             await dispatch(updateTransaction({transactionId: id, apiTransaction}));
         }
+        await dispatch(fetchTransaction())
     }
 
 
     useEffect(() => {
         dispatch(fetchTransaction())
-    }, [fetchTransaction]);
+    }, [dispatch]);
 
     const total = transactions.reduce((acc, value) => {
         return acc + value.amount
     },0)
-
-    console.log(total)
 
     return (
         <div className='container'>
@@ -51,7 +50,7 @@ const Transactions = () => {
                             <p>{transaction.category}</p>
                         </div>
                         <div>
-                        <p>{transaction.amount}</p>
+                        <p>{transaction.type === 'доход'? '+' : '-'}{transaction.amount}</p>
                             <div>
                                 <button onClick={onClickModal}>Edit</button>
                                 <button onClick={() => removeTransaction(transaction.id)}>delete</button>

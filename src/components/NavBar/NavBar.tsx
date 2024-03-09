@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 import AddTransaction from "../addTrahsaction/AddTransaction";
 import {useAppDispatch} from "../../app/hooks";
-import {addTransaction} from "../../store/FinanceThunk";
+import {addTransaction, fetchTransaction} from "../../store/FinanceThunk";
 import {ApiTransaction} from "../../types";
 
 const NavBar = () => {
@@ -15,6 +15,7 @@ const NavBar = () => {
 
     const onSubmit = async (apiTransaction:ApiTransaction) => {
         await dispatch(addTransaction(apiTransaction));
+        await dispatch(fetchTransaction())
     }
 
     return (

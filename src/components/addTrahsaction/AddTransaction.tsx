@@ -1,7 +1,9 @@
 import {CATEGORY, OPTIONS} from "../../component";
 import {ApiTransaction, TransactionMutation} from "../../types";
 import * as React from "react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {fetchCategories} from "../../store/FinanceThunk";
 
 
 interface Props {
@@ -18,15 +20,14 @@ const initialState:TransactionMutation = {
 
 const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) => {
     const [transaction, setTransaction] = useState(extending);
-    // const dispatch = useAppDispatch();
+    const categories = useAppSelector(state => state.transaction.category)
+    const dispatch = useAppDispatch()
 
     const now = new Date();
-
     const createdAt = now.toISOString();
 
     const onTransactionSubmit = (e:React.FormEvent) => {
         e.preventDefault();
-
             onSubmit({
                 date:  createdAt,
                 type: transaction.type,
@@ -41,8 +42,13 @@ const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) =
             ...prevState,
             [e.target.name]: e.target.value
         }));
-
     }
+
+    useEffect(() => {
+        dispatch(fetchCategories)
+    }, [dispatch]);
+
+    console.log(categories)
 
 
 

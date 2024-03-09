@@ -1,5 +1,13 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {ApiCategory, ApiTransaction, ApiTransactions, Transaction, UpdateTransaction} from "../types";
+import {
+    ApiCategories,
+    ApiCategory,
+    ApiTransaction,
+    ApiTransactions,
+    Category,
+    Transaction,
+    UpdateTransaction
+} from "../types";
 import axiosApi from "../axiosApi";
 export const fetchTransaction = createAsyncThunk<Transaction[]>(
     'transaction/fetchTransaction',
@@ -15,6 +23,20 @@ export const fetchTransaction = createAsyncThunk<Transaction[]>(
         }))
     }
 );
+
+export const fetchCategories = createAsyncThunk<Category[]>(
+    'category/fetchCategories',
+    async () => {
+        const {data:category} = await axiosApi.get<ApiCategories | null>('/categories.json');
+        if (category === null){
+            return []
+        }
+        return Object.keys(category).map(id => ({
+            id,
+            ...category[id]
+        }))
+    }
+)
 
 export const addTransaction = createAsyncThunk<void ,ApiTransaction>(
         'transaction/addTransaction',
@@ -37,6 +59,12 @@ export const deleteTransaction = createAsyncThunk<void,string>(
     }
 );
 
+export const deleteCategory = createAsyncThunk<void,string>(
+    'category/deleteCategory',
+    async (id:string) => {
+        await axiosApi.delete(`/categories/${id}.json`);
+    }
+)
 export const updateTransaction = createAsyncThunk<void,UpdateTransaction>(
     'transaction/updateTransaction',
     async ({transactionId,apiTransaction}) => {

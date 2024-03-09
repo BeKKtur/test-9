@@ -1,23 +1,36 @@
-import {ApiTransaction, Transaction} from "../types";
+import {ApiTransaction, Category, Transaction} from "../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {deleteTransaction, fetchOneTransaction, fetchTransaction, updateTransaction} from "./FinanceThunk";
+import {
+    deleteCategory,
+    deleteTransaction,
+    fetchCategories,
+    fetchOneTransaction,
+    fetchTransaction,
+    updateTransaction
+} from "./FinanceThunk";
 
 interface State {
     transactions: Transaction[];
     transactionLoading: boolean;
-    delete: boolean | string;
+    deleteTransaction: boolean | string;
     updateLoading: boolean;
     oneTransaction: ApiTransaction | boolean;
     oneTransactionLoading: boolean;
+    category: Category[];
+    categoryLoading: boolean;
+    deleteCategory: boolean | string
 }
 
 const initialState:State = {
     transactions: [],
     transactionLoading: false,
-    delete: false,
+    deleteTransaction: false,
     updateLoading: false,
     oneTransaction: false,
     oneTransactionLoading: false,
+    category: [],
+    categoryLoading: false,
+    deleteCategory: false
 }
 
 const financeSlice = createSlice({
@@ -35,11 +48,11 @@ const financeSlice = createSlice({
         });
 
         builder.addCase(deleteTransaction.pending, (state, action) => {
-            state.delete = action.meta.arg
+            state.deleteTransaction = action.meta.arg
         }).addCase(deleteTransaction.fulfilled, (state) => {
-            state.delete = false
+            state.deleteTransaction = false
         }).addCase(deleteTransaction.rejected, (state) => {
-            state.delete = false
+            state.deleteTransaction = false
         });
 
         builder.addCase(updateTransaction.pending,(state) => {
@@ -57,6 +70,23 @@ const financeSlice = createSlice({
             state.oneTransactionLoading = false;
         }).addCase(fetchOneTransaction.rejected, (state) => {
             state.oneTransactionLoading = false;
+        });
+
+        builder.addCase(fetchCategories.pending, (state) => {
+            state.categoryLoading = true;
+        }).addCase(fetchCategories.fulfilled, (state,{payload: category}) => {
+            state.categoryLoading = false;
+            state.category = category;
+        }).addCase(fetchCategories.rejected, (state) => {
+            state.categoryLoading = false;
+        });
+
+        builder.addCase(deleteCategory.pending, (state, action) => {
+            state.deleteCategory = action.meta.arg
+        }).addCase(deleteCategory.fulfilled, (state) => {
+            state.deleteCategory = false
+        }).addCase(deleteCategory.rejected, (state) => {
+            state.deleteCategory = false
         });
     }
 });
