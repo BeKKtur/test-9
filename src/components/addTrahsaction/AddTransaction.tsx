@@ -2,9 +2,8 @@ import {CATEGORY, OPTIONS} from "../../component";
 import {ApiTransaction, TransactionMutation} from "../../types";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {useAppDispatch} from "../../app/hooks";
 import {fetchCategories} from "../../store/FinanceThunk";
-
 
 interface Props {
     onSubmit: (transaction:ApiTransaction) => void
@@ -20,7 +19,6 @@ const initialState:TransactionMutation = {
 
 const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) => {
     const [transaction, setTransaction] = useState(extending);
-    const categories = useAppSelector(state => state.transaction.category)
     const dispatch = useAppDispatch()
 
     const now = new Date();
@@ -48,8 +46,6 @@ const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) =
         dispatch(fetchCategories)
     }, [dispatch]);
 
-    console.log(categories)
-
 
 
 
@@ -65,6 +61,7 @@ const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) =
                         required
                         onChange={onChange}
                     >
+                        <option>Select type</option>
                         {OPTIONS.map(type => (
                             <option value={type.value} key={type.value}>{type.label}</option>
                         ))}
@@ -78,6 +75,7 @@ const AddTransaction:React.FC<Props> = ({ onSubmit ,extending = initialState}) =
                         required
                         onChange={onChange}
                     >
+                        <option>Select category</option>
                         {CATEGORY.map(category => (
                             <option value={category.value} key={category.value}>{category.label}</option>
                         ))}

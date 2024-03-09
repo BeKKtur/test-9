@@ -34,8 +34,14 @@ const Transactions = () => {
     }, [dispatch]);
 
     const total = transactions.reduce((acc, value) => {
-        return acc + value.amount
-    },0)
+        if (value.type === 'доход') {
+            return acc + value.amount
+        } else {
+            return acc - value.amount
+        }
+    },0);
+
+    console.log(transactions)
 
     return (
         <div className='container'>
