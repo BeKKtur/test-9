@@ -1,5 +1,5 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {transactionReducer} from "../store/TransactionSlice";
+import {transactionReducer} from "../store/FinanceSlice";
 
 export const store = configureStore({
     reducer: {
